@@ -1,4 +1,4 @@
-mod tag;
-mod io;
-mod iter;
+pub mod tag;
+pub mod io;
+pub mod iter;
 

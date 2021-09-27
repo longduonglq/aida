@@ -5,6 +5,7 @@ use xml::common::XmlVersion;
 use chrono::{Date, Utc, DateTime};
 use std::borrow::Cow;
 use std::rc::Rc;
+use super::iter::*;
 
 type XmlString = String;
 
@@ -53,46 +54,38 @@ impl Default for XmlMetaData {
 impl XmlTag
 {
     // Public functions
-    // fn subtags_with_name(name: &str) -> impl Iterator<Item = &XmlTag> {
-    //     todo!();
-    // }
+
+    // Search
+    fn all_child_with_name(self: Rc<XmlTag>, name: &'static str)
+        -> impl Iterator<Item = Rc<XmlTag>>
+    {
+        let iter = BfsXmlTagIter::from(self);
+        iter.filter(move |tag| {tag.name.as_str() == name})
+    }
+
+    fn first_child_with_name(self: Rc<XmlTag>, name: &'static str)
+                             -> impl Iterator<Item = Rc<XmlTag>>
+    {
+        self.all_child_with_name(name).take(1)
+    }
+
+
+    // Tag info
 
     // Private
-    fn get_tag_st<F: Fn(&XmlTag) -> bool>(
-        &self,
-        cond: F
-    ) -> Option<&XmlTag>
-    {
-        let mut queue = VecDeque::new();
-        queue.push_back(self);
-        while !queue.is_empty() {
-            let v = queue.pop_front().unwrap();
-            if !cond(&v) { return Some(&v); }
-            for child in &v.children {
-                queue.push_back(child);
-            }
-        }
-        None
-    }
 
-    fn find_first_tag_st(
-        &self,
-        selector: fn(
-            name: &str,
-            attribs: &Vec<XmlAttrib>,
-            children: &Vec<Box<XmlTag>>
-        ) -> bool
-    ) -> Option<&XmlTag>
-    {
-        todo!()
-    }
 }
 
 
 #[cfg(test)]
 mod tests {
+    use crate::tag::XmlTag;
+
     #[test]
     fn load_tree() {
-
+        let tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        for child in tree.first_child_with_name("part") {
+            println!("{:?}", child);
+        }
     }
 }

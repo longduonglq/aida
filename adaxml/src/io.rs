@@ -6,11 +6,13 @@ use xml::attribute::Attribute;
 use std::fmt::{Debug, Formatter, Write};
 use std::rc::Rc;
 use std::borrow::{BorrowMut, Borrow};
+use std::fs::File;
+use xml::ParserConfig;
 
 impl XmlTag
 {
-    fn from_reader<T: Read>(mut events: Peekable<Events<T>>)
-        -> (Option<XmlMetaData>, Option<Rc<XmlTag>>)
+    pub fn from_reader<T: Read>(mut events: Peekable<Events<T>>)
+        -> Option<Rc<XmlTag>>
     {
         // Take care of StartDocument here
         fn _recursive_build<T: Read>(events: &mut Peekable<Events<T>>)
@@ -73,9 +75,9 @@ impl XmlTag
                 Ok(StartDocument {..}) => {
                     return _recursive_build(events); // passthrough
                 }
-                Ok(EndDocument) => {
-                    return None;
-                }
+                // These terminal tag can be ignored by returning None;
+                // However, the top level StartDocument must be passed through by returning recursive call.
+                Ok(EndDocument) => { return None; }
                 Ok(ProcessingInstruction {..}) | Ok(Comment(_)) | Ok(Whitespace(_)) => {
                     return None;
                 }
@@ -97,6 +99,7 @@ impl XmlTag
                 }
             {
                 let mut build_res = _recursive_build(events);
+                // Ignore terminal ignorable tags (ie CData, Whitespace,... )
                 if build_res.is_some()
                 {
                     let built_child = build_res.as_ref().unwrap();
@@ -124,7 +127,18 @@ impl XmlTag
             current_tag.children = children;
             return Some(Rc::new(current_tag));
         }
-        (Some(XmlMetaData::default()), _recursive_build(&mut events))
+        _recursive_build(&mut events)
+    }
+
+    pub fn from_path(path: &str) -> Option<Rc<XmlTag>>
+    {
+        let mut f = File::open(path).ok()?;
+        let mut reader = ParserConfig::new()
+            .trim_whitespace(true)
+            .ignore_comments(true)
+            .create_reader(f);
+        let tree = XmlTag::from_reader(reader.into_iter().peekable());
+        return tree;
     }
 }
 
@@ -161,6 +175,34 @@ impl Debug for XmlTag {
     }
 }
 
+impl XmlTag {
+    pub fn show_local_tag(&self) {
+        static ATOMIC_INDENT: &'static str = "    ";
+        let indent = ATOMIC_INDENT;
+        println!("∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧");
+        println!(
+            "{0}+<{1} {2}> {3}\n",
+            "", self.name,
+            self.attribs.iter()
+            .map(|attr: &XmlAttrib| {format!("{}={}", attr.name, attr.value)})
+            .fold("".to_string(), |r, s| {r + s.as_str() + " "}),
+            {
+                if self.value.is_some() {self.value.as_ref().unwrap()}
+                else {""}
+            }
+        );
+        for tag in self.children.iter() {
+            println!("{0} +{1}", indent, tag.name);
+        }
+        println!(
+            "{0}-</{1}>",
+            "",
+            self.name
+        );
+        println!("∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨\n");
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use xml::{EventReader, ParserConfig};
@@ -179,6 +221,12 @@ mod tests {
         // }
         let tree =
         XmlTag::from_reader(reader.into_iter().peekable());
-        println!("{:?}", tree.1.unwrap());
+        println!("{:?}", tree.unwrap());
+    }
+
+    #[test]
+    fn ed() {
+        let tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        println!("{:?}", tree);
     }
 }

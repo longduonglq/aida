@@ -1,42 +1,89 @@
 use crate::tag::XmlTag;
 use std::collections::VecDeque;
 use std::iter::FromIterator;
+use std::rc::{Rc, Weak};
+use std::array::IntoIter;
 
-struct BfsXmlTagIter<'a> {
-    queue: VecDeque<&'a XmlTag>
+pub struct BfsXmlTagIter {
+    queue: VecDeque<Rc<XmlTag>>
 }
 
-impl<'a> From<&'a XmlTag> for BfsXmlTagIter<'a> {
-    fn from(tag: &'a XmlTag) -> Self {
+impl<T> From<T> for BfsXmlTagIter
+where
+    T: Into<Rc<XmlTag>>
+{
+    fn from(tag: T) -> Self {
         Self {
-            queue: VecDeque::from_iter([tag]),
+            queue: VecDeque::from_iter([tag.into()]),
         }
     }
 }
 
-impl<'a> Iterator for BfsXmlTagIter<'a> {
-    type Item = &'a XmlTag;
+impl Iterator for BfsXmlTagIter {
+    type Item = Rc<XmlTag>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if !self.queue.is_empty() {
             let v = self.queue.pop_front().unwrap();
             for child in &v.children {
-                self.queue.push_back(child);
+                self.queue.push_back(child.clone());
             }
-            return Some(&v);
+            return Some(v);
         }
         None
     }
 }
 
-struct DfsXmlTagIter<'a> {
-    stack: Vec<&'a XmlTag>
+
+pub struct DfsXmlTagIter {
+    stack: Vec<Rc<XmlTag>>
 }
 
-impl<'a> Iterator for DfsXmlTagIter<'a> {
-    type Item = &'a XmlTag;
+impl<T> From<T> for DfsXmlTagIter
+    where
+    T: Into<Rc<XmlTag>>
+{
+    fn from(tag: T) -> Self {
+        Self {
+            stack: Vec::from_iter([tag.into()]),
+        }
+    }
+}
+
+impl Iterator for DfsXmlTagIter {
+    type Item = Rc<XmlTag>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        todo!()
+        if !self.stack.is_empty() {
+            let v = self.stack.pop().unwrap();
+            for child in v.children.iter().rev() {
+                self.stack.push(child.clone());
+            }
+            return Some(v);
+        }
+        None
+    }
+}
+
+#[cfg(test)]
+mod tests{
+    use crate::tag::XmlTag;
+    use crate::io;
+    use crate::iter::{BfsXmlTagIter, DfsXmlTagIter};
+
+    #[test]
+    fn test_bfs_iter() {
+        let tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        for leaf in BfsXmlTagIter::from(tree) {
+            leaf.show_local_tag();
+        }
+    }
+
+    #[test]
+    fn test_dfs_iter() {
+        let tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        for leaf in DfsXmlTagIter::from(tree) {
+            leaf.show_local_tag();
+        }
     }
 }
