@@ -1,22 +1,25 @@
 use super::tag::*;
 use xml::reader::{self, XmlEvent::*, Events, XmlEvent};
 use core::iter::Peekable;
-use std::io::Read;
-use xml::attribute::Attribute;
-use std::fmt::{Debug, Formatter, Write};
-use std::rc::Rc;
-use std::borrow::{BorrowMut, Borrow};
+use std::io::{Read, Write};
+use xml::attribute::{Attribute, OwnedAttribute};
+use std::fmt::{Debug, Formatter};
+use std::borrow::{BorrowMut, Borrow, Cow};
 use std::fs::File;
-use xml::ParserConfig;
+use xml::writer::{EventWriter, EmitterConfig, XmlEvent as WriterXmlEvent};
+use xml::{ParserConfig};
+use xml::common::XmlVersion;
+use xml::name::OwnedName;
+use xml::namespace::Namespace;
 
-impl XmlTag
+impl<'a> XmlTag<'a>
 {
     pub fn from_reader<T: Read>(mut events: Peekable<Events<T>>)
-        -> Option<Rc<XmlTag>>
+        -> Option<Cow<'a, XmlTag<'a>>>
     {
         // Take care of StartDocument here
-        fn _recursive_build<T: Read>(events: &mut Peekable<Events<T>>)
-            -> Option<Rc<XmlTag>>
+        fn _recursive_build<'a, T: Read>(events: &mut Peekable<Events<T>>)
+            -> Option<Cow<'a, XmlTag<'a>>>
         {
             /**
             Working mechanism:
@@ -64,7 +67,7 @@ impl XmlTag
                         value: {if value.is_empty() {None} else {Some(value)}},
                         ..current_tag
                     };
-                    return Some(Rc::new(current_tag));
+                    return Some(Cow::Owned(current_tag));
                 }
                 Ok(EndElement {name}) => {
                     // Logical error because EndElement should be taken care of already when processing
@@ -125,12 +128,12 @@ impl XmlTag
                 events.next();
             } // removing EndElement(name)
             current_tag.children = children;
-            return Some(Rc::new(current_tag));
+            return Some(Cow::Owned(current_tag));
         }
         _recursive_build(&mut events)
     }
 
-    pub fn from_path(path: &str) -> Option<Rc<XmlTag>>
+    pub fn from_path(path: &str) -> Option<Cow<XmlTag>>
     {
         let mut f = File::open(path).ok()?;
         let mut reader = ParserConfig::new()
@@ -140,9 +143,70 @@ impl XmlTag
         let tree = XmlTag::from_reader(reader.into_iter().peekable());
         return tree;
     }
+
+    pub fn to_writer<W: Write>(&self, writer: &mut EventWriter<W>) {
+        fn _recursive_write<W: Write>(me: &XmlTag, w: &mut EventWriter<W>) {
+            // TODO: quite stupid, please remove
+            let DUMMY_NAMESPACE: Namespace = xml::namespace::Namespace::empty();
+            let tag_begin = WriterXmlEvent::StartElement {
+                name: xml::name::Name {
+                    local_name: me.name.as_str(),
+                    namespace: None,
+                    prefix: None
+                },
+                attributes: {
+                    me.attribs.iter()
+                    .map(|attrib|{
+                        xml::attribute::Attribute {
+                            name: xml::name::Name::from(attrib.name.as_str()),
+                            value: attrib.value.as_ref()
+                        }
+                    })
+                    .collect()
+                },
+                namespace: Cow::Borrowed(&DUMMY_NAMESPACE)
+            };
+            w.write(tag_begin);
+            if me.value.is_some() {
+                let value_event = WriterXmlEvent::Characters(me.value.as_ref().unwrap());
+                w.write(value_event);
+            }
+
+            for child in me.children.iter() {
+                _recursive_write(child, w)
+            }
+
+            let tag_end = WriterXmlEvent::EndElement {
+                name: Some(xml::name::Name {
+                    local_name: me.name.as_str(),
+                    namespace: None,
+                    prefix: None
+                })
+            };
+            w.write(tag_end);
+        }
+        let doc_begin: WriterXmlEvent = WriterXmlEvent::StartDocument {
+            version: XmlVersion::Version10,
+            encoding: Some("UTF-8"),
+            standalone: None
+        };
+        writer.write(doc_begin);
+        _recursive_write(self, writer);
+    }
+
+    pub fn to_path(&self, path: &str) -> anyhow::Result<()> {
+        let mut file = File::create(path)?;
+        let mut writer = EmitterConfig::new()
+            .perform_indent(true)
+            .create_writer(&mut file);
+
+        self.to_writer(&mut writer);
+
+        Ok(())
+    }
 }
 
-impl Debug for XmlTag {
+impl<'a> Debug for XmlTag<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         static ATOMIC_INDENT: &'static str = "    ";
         fn _recurse_write(me: &XmlTag, depth: i32, sink: &mut Formatter<'_>) {
@@ -175,7 +239,7 @@ impl Debug for XmlTag {
     }
 }
 
-impl XmlTag {
+impl<'a> XmlTag<'a> {
     pub fn show_local_tag(&self) {
         static ATOMIC_INDENT: &'static str = "    ";
         let indent = ATOMIC_INDENT;
@@ -228,5 +292,6 @@ mod tests {
     fn ed() {
         let tree = XmlTag::from_path("test/template.musicxml").unwrap();
         println!("{:?}", tree);
+        tree.to_path("test/outtemplate.xml");
     }
 }

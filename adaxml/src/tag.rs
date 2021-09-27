@@ -3,9 +3,9 @@ use std::iter::Iterator;
 use std::path::Iter;
 use xml::common::XmlVersion;
 use chrono::{Date, Utc, DateTime};
-use std::borrow::Cow;
-use std::rc::Rc;
+use std::borrow::{Cow, Borrow};
 use super::iter::*;
+use std::str::FromStr;
 
 type XmlString = String;
 
@@ -23,14 +23,14 @@ pub struct XmlAttrib {
 }
 
 #[derive(Clone)]
-pub struct XmlTag {
+pub struct XmlTag<'a> {
     pub name: XmlString,
     pub value: Option<XmlString>,
     pub attribs: Vec<XmlAttrib>,
-    pub children: Vec< Rc<XmlTag>>
+    pub children: Vec< Cow<'a, XmlTag<'a>>>
 }
 
-impl Default for XmlTag {
+impl<'a> Default for XmlTag<'a> {
     fn default() -> Self {
         XmlTag {
             name: XmlString::new(),
@@ -51,27 +51,37 @@ impl Default for XmlMetaData {
     }
 }
 
-impl XmlTag
+impl<'a> XmlTag<'a>
 {
     // Public functions
 
     // Search
-    fn all_child_with_name(self: Rc<XmlTag>, name: &'static str)
-        -> impl Iterator<Item = Rc<XmlTag>>
+    fn all_child_with_name(&'a self, name: &'static str)
+        -> impl Iterator<Item = Cow<'a, XmlTag<'a>>>
     {
-        let iter = BfsXmlTagIter::from(self);
+        let iter = BfsXmlTagIter::from(Cow::Borrowed(self));
         iter.filter(move |tag| {tag.name.as_str() == name})
     }
 
-    fn first_child_with_name(self: Rc<XmlTag>, name: &'static str)
-                             -> impl Iterator<Item = Rc<XmlTag>>
+    fn first_child_with_name(&'a self, name: &'static str)
+        -> impl Iterator<Item = Cow<'a, XmlTag<'a>>>
     {
         self.all_child_with_name(name).take(1)
     }
 
-
     // Tag info
-
+    fn get_attrib_value<T>(&self, key: &'static str)
+        -> Option<T>
+    where
+        T: std::str::FromStr
+    {
+        self.attribs.iter()
+        .filter(|attr| {attr.name.as_str() == key})
+        .next()
+        .map(|tag| {tag.value.clone()})
+        .map(|val| { val.parse().ok() })
+        .flatten()
+    }
     // Private
 
 }
@@ -80,12 +90,13 @@ impl XmlTag
 #[cfg(test)]
 mod tests {
     use crate::tag::XmlTag;
+    use std::rc::Rc;
 
     #[test]
     fn load_tree() {
-        let tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        let mut tree = XmlTag::from_path("test/template.musicxml").unwrap();
         for child in tree.first_child_with_name("part") {
-            println!("{:?}", child);
+            println!("{:?} -- {:?}", child, child.get_attrib_value("id").unwrap_or("NOTHING".to_string()));
         }
     }
 }

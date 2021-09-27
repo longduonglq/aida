@@ -1,16 +1,16 @@
 use crate::tag::XmlTag;
 use std::collections::VecDeque;
 use std::iter::FromIterator;
-use std::rc::{Rc, Weak};
 use std::array::IntoIter;
+use std::borrow::{Borrow, Cow};
 
-pub struct BfsXmlTagIter {
-    queue: VecDeque<Rc<XmlTag>>
+pub struct BfsXmlTagIter<'a> {
+    queue: VecDeque< Cow<'a, XmlTag<'a>>>
 }
 
-impl<T> From<T> for BfsXmlTagIter
+impl<'a, T> From<T> for BfsXmlTagIter<'a>
 where
-    T: Into<Rc<XmlTag>>
+    T: Into<Cow<'a, XmlTag<'a>>>
 {
     fn from(tag: T) -> Self {
         Self {
@@ -19,8 +19,8 @@ where
     }
 }
 
-impl Iterator for BfsXmlTagIter {
-    type Item = Rc<XmlTag>;
+impl<'a> Iterator for BfsXmlTagIter<'a> {
+    type Item = Cow<'a, XmlTag<'a>>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if !self.queue.is_empty() {
@@ -35,13 +35,13 @@ impl Iterator for BfsXmlTagIter {
 }
 
 
-pub struct DfsXmlTagIter {
-    stack: Vec<Rc<XmlTag>>
+pub struct DfsXmlTagIter<'a> {
+    stack: Vec<Cow<'a, XmlTag<'a>>>
 }
 
-impl<T> From<T> for DfsXmlTagIter
+impl<'a, T> From<T> for DfsXmlTagIter<'a>
     where
-    T: Into<Rc<XmlTag>>
+    T: Into<Cow<'a, XmlTag<'a>>>
 {
     fn from(tag: T) -> Self {
         Self {
@@ -50,8 +50,8 @@ impl<T> From<T> for DfsXmlTagIter
     }
 }
 
-impl Iterator for DfsXmlTagIter {
-    type Item = Rc<XmlTag>;
+impl<'a> Iterator for DfsXmlTagIter<'a> {
+    type Item = Cow<'a, XmlTag<'a>>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if !self.stack.is_empty() {
