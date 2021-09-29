@@ -95,8 +95,15 @@ mod tests {
     #[test]
     fn load_tree() {
         let mut tree = XmlTag::from_path("test/template.musicxml").unwrap();
-        for child in tree.first_child_with_name("part") {
+        for child in tree.first_child_with_name("identification") {
             println!("{:?} -- {:?}", child, child.get_attrib_value("id").unwrap_or("NOTHING".to_string()));
         }
+        let mut subtree = tree.first_child_with_name("identification").last().unwrap();
+        let mut mutsubtree = subtree.to_owned();
+        mutsubtree.to_mut().name = "studp".to_string();
+        mutsubtree.to_mut().value = Some("Long".to_string());
+        mutsubtree.to_mut().children[0].to_mut().name = "fs".to_string();
+        println!("{:?}", subtree);
+        println!("{:?}", mutsubtree);
     }
 }

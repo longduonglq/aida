@@ -69,7 +69,7 @@ impl<'a> XmlTag<'a>
                     };
                     return Some(Cow::Owned(current_tag));
                 }
-                Ok(EndElement {name}) => {
+                Ok(EndElement {..}) => {
                     // Logical error because EndElement should be taken care of already when processing
                     // the StartElement. In short, _recursive_build process EndElement instead of
                     // calling itself to process this.

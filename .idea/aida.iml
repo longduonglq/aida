@@ -5,9 +5,11 @@
       <sourceFolder url="file://$MODULE_DIR$/adaxml/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ixml/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/m32/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/ixml/target" />
       <excludeFolder url="file://$MODULE_DIR$/adaxml/target" />
+      <excludeFolder url="file://$MODULE_DIR$/m32/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

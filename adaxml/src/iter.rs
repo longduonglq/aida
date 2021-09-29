@@ -66,7 +66,7 @@ impl<'a> Iterator for DfsXmlTagIter<'a> {
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
     use crate::tag::XmlTag;
     use crate::io;
     use crate::iter::{BfsXmlTagIter, DfsXmlTagIter};
