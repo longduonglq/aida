@@ -2,21 +2,24 @@ use std::borrow::Borrow;
 use std::fmt::{Debug, Formatter};
 use std::ops::{Add, Sub};
 use fraction::Integer;
+use crate::attribs::Offset;
 
+#[derive(Copy, Clone)]
 pub struct PInterval<T>
 {
-    start: T,
-    end: T,
-    length: T
+    pub(crate) start: T,
+    pub(crate) end: T,
+    pub(crate) length: T
 }
 
 impl<T> PInterval<T>
 where T:
     Sub<Output = T> + Add<Output = T> +
-    PartialOrd<i32> + Ord +
+    From<i32> +
+    PartialOrd<T> + Ord +
     Copy + Debug
 {
-    fn from_end_points(_start: T, _end: T) -> Self {
+    pub fn from_end_points(_start: T, _end: T) -> Self {
         Self {
             start: _start,
             end: _end,
@@ -24,7 +27,7 @@ where T:
         }
     }
 
-    fn from_start_and_length(_start: T, _length: T) -> Self {
+    pub fn from_start_and_length(_start: T, _length: T) -> Self {
         Self {
             start: _start,
             end: _start + _length,
@@ -32,54 +35,58 @@ where T:
         }
     }
 
-    fn set_start_keep_length(&mut self, _start: T)  {
+    pub fn set_start_keep_length(&mut self, _start: T)  {
         self.start = _start;
         self.end = self.start + self.length;
     }
 
-    fn set_start_keep_end(&mut self, _start: T) {
+    pub fn set_start_keep_end(&mut self, _start: T) {
         self.start = _start;
         self.length = self.end - self.start;
-        assert!(self.length >= 0);
+        assert!(self.length >= T::from(0));
     }
 
-    fn set_length_keep_start(&mut self, _length: T) {
+    pub fn set_length_keep_start(&mut self, _length: T) {
         self.length = _length;
         self.end = self.start + self.length;
     }
 
-    fn set_length_keep_end(&mut self, _length: T) {
+    pub fn set_length_keep_end(&mut self, _length: T) {
         self.length = _length;
         self.start = self.end - self.length;
     }
 
-    fn set_end_keep_start(&mut self, _end: T) {
+    pub fn set_end_keep_start(&mut self, _end: T) {
         self.end = _end;
         self.length = self.end - self.start;
     }
 
-    fn set_end_keep_length(&mut self, _end: T) {
+    pub fn set_end_keep_length(&mut self, _end: T) {
         self.end = _end;
         self.start = self.end - self.length;
     }
 
-    fn does_overlap_with(&self, other: &Self) -> bool {
+    pub fn does_overlap_with(&self, other: &Self) -> bool {
         self.start < other.end && other.start < self.end
     }
 
-    fn is_disjoint_with(&self, other: &Self) -> bool {
+    pub fn is_disjoint_with(&self, other: &Self) -> bool {
         !self.does_overlap_with(other)
     }
 
-    fn does_swallow(&self, other: &Self) -> bool {
+    pub fn does_swallow(&self, other: &Self) -> bool {
         self.start <= other.start && self.end >= other.end
     }
 
-    fn is_swallowed_by(&self, other: &Self) -> bool {
+    pub fn is_swallowed_by(&self, other: &Self) -> bool {
         other.start <= self.start && other.end >= self.end
     }
 
-    fn get_intersection_with(&self, other: &Self) -> Self {
+    pub fn does_half_closed_contains_offset(&self, offset: T) -> bool {
+        self.start <= offset && offset < self.end
+    }
+
+    pub fn get_intersection_with(&self, other: &Self) -> Self {
         Self::from_end_points(
             core::cmp::max(self.start, other.start),
             core::cmp::min(self.end, other.end)
