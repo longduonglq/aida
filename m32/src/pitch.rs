@@ -70,10 +70,10 @@ pub enum Alter {
 
 #[derive(Clone)]
 pub struct Pitch {
-    step: DiatonicStep,
-    octave: Option<Octave>,
-    alter: Alter,
-    ps: PsType
+    pub step: DiatonicStep,
+    pub octave: Option<Octave>,
+    pub alter: Alter,
+    pub ps: PsType
 }
 
 impl Eq for Pitch {}

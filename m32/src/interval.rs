@@ -66,6 +66,10 @@ where T:
         self.start = self.end - self.length;
     }
 
+    pub fn displace_start_keep_length(&mut self, displacement: T) {
+        self.set_start_keep_length(self.start + displacement);
+    }
+
     pub fn does_overlap_with(&self, other: &Self) -> bool {
         self.start < other.end && other.start < self.end
     }
@@ -91,6 +95,11 @@ where T:
             core::cmp::max(self.start, other.start),
             core::cmp::min(self.end, other.end)
         )
+    }
+
+    pub fn merge_with(&mut self, other: &Self) {
+        assert_eq!(self.start + self.length, other.start, "Cannot join non-adjacent intervals");
+        self.set_length_keep_start(self.length + other.length);
     }
 }
 
