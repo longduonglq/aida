@@ -76,21 +76,24 @@ impl From<Duration> for DurationName {
 }
 
 mod duration_utils {
+    use std::borrow::Borrow;
     use smallvec::SmallVec;
-    use crate::attribs::Duration;
+    use crate::attribs::{BeatDivision, Duration};
     use std::ops::Bound::*;
     use fraction::Ratio;
-    use crate::duration::DURATION_TO_DURATION_NAME;
+    use crate::duration::{DURATION_TO_DURATION_NAME, DurationName};
 
-    fn maximal_extractable_primitive_duration(duration: &Duration) -> Duration {
+    pub fn maximal_extractable_primitive_duration(duration: &Duration) -> Duration {
         DURATION_TO_DURATION_NAME
             .range((Unbounded, Included(duration)))
             .last()
             .expect("Cannot find maximal extractable primitive duration")
-            .0.clone()
+            .0
+            .clone()
     }
 
-    fn decompose_duration_into_primitives(duration: &Duration)
+    // Decompose a duration so that it is representable in conventional duration type
+    pub fn decompose_duration_into_primitives(duration: &Duration)
         -> Result<SmallVec<[(Duration, u8); 4]>, anyhow::Error>
     {
         let mut decomposition = SmallVec::<[(Duration, u8); 4]>::new();
@@ -101,9 +104,10 @@ mod duration_utils {
         while remainder >= max_extractable_primitive {
             remainder -= max_extractable_primitive;
             if !decomposition.is_empty() {
-                let mut last_component = decomposition.last()
-                    .expect("check was done in if above")
-                    .clone();
+                let mut last_component
+                    = decomposition
+                    .last_mut()
+                    .expect("check was done in if above");
                 if max_extractable_primitive ==
                     last_component.0 / ((2 as i32).pow((last_component.1 + 1) as i32 as u32))
                 {
@@ -119,5 +123,16 @@ mod duration_utils {
             return Result::Err(anyhow::anyhow!("Duration not representable in primitives"));
         }
         return Ok(decomposition);
+    }
+
+    pub fn compute_dotted_length(duration: Duration, mut dots: u8) -> Duration
+    {
+        assert!(dots >= 0);
+        let mut res = Duration::from_integer(0);
+        while dots >= 0 {
+            res += (duration / (2 as BeatDivision).pow(dots as u32));
+            dots -= 1;
+        }
+        res
     }
 }

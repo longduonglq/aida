@@ -6,6 +6,7 @@ use smallvec::SmallVec;
 use crate::pitch::Pitch;
 use crate::lyric::Lyric;
 use crate::color::*;
+use crate::config::config;
 use crate::gnote::Gnote;
 
 bitflags! {
@@ -29,7 +30,7 @@ pub struct SimpleNote {
 }
 
 impl SimpleNote {
-    fn new(
+    pub fn new(
         offset: Offset,
         duration: Duration,
         lyrics: Vec<Lyric>,
@@ -48,22 +49,42 @@ impl SimpleNote {
     }
 
     pub fn split_at_offset(&self, split_offset: Offset)
-        -> (SimpleNote, SimpleNote)
+        -> (SmallVec<[SimpleNote; config::EXP_TUP_LEN]>, SmallVec<[SimpleNote; config::EXP_TUP_LEN]>)
     {
         assert!(self.interval.does_half_closed_contains_offset(split_offset));
         assert!(self.interval.start != split_offset && self.interval.end != split_offset);
 
         let mut left = self.clone();
         let mut right = self.clone();
+        left.interval.set_end_keep_start(split_offset);
+        right.interval.set_start_keep_end(split_offset);
         left.tie_info |= TieInfo::TieStart;
         right.tie_info |= TieInfo::TieEnd;
 
-        (left, right)
+        (SmallVec::from_elem(left, 1),
+         SmallVec::from_elem(right, 1))
     }
 
     pub fn is_rest(&self) -> bool { self.pitches.is_empty() }
     pub fn is_note(&self) -> bool { self.pitches.len() == 1 }
     pub fn is_chord(&self) -> bool { self.pitches.len() > 1 }
+
+    pub fn append_lyric(&mut self, lyric_text: String) {
+        assert!(self.lyrics.is_sorted_by_key(|l| {l.number}));
+        self.lyrics.push(
+            Lyric::new(
+                if self.lyrics.is_empty() {0}
+                else {self.lyrics.last().unwrap().number + 1},
+                lyric_text
+            )
+        );
+    }
+
+    pub fn remove_lyric(&mut self, idx: usize) {
+        self.lyrics.remove(idx);
+        self.lyrics.iter_mut().enumerate()
+        .for_each(|(i, l)| {l.number = i as u8 })
+    }
 }
 
 impl Debug for SimpleNote {

@@ -80,16 +80,13 @@ impl Eq for Pitch {}
 
 impl PartialEq<Self> for Pitch {
     fn eq(&self, other: &Self) -> bool {
-        self.ps == other.ps
+        self.ps.eq(&other.ps)
     }
 }
 
 impl PartialOrd<Self> for Pitch {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let cmp = self.ps - other.ps;
-        if cmp < 0 { Some(Ordering::Less) }
-        else if cmp == 0 { Some(Ordering::Equal) }
-        else { Some(Ordering::Greater) }
+        self.ps.partial_cmp(&other.ps)
     }
 }
 
@@ -120,6 +117,10 @@ impl Pitch {
         else if pc == 1 || pc == 6 || pc == 8 {
             self.alter = Alter::Sharp;
             self.step = DiatonicStep::from(pc - 1);
+        }
+        else if pc == 10 || pc == 3 {
+            self.alter = Alter::Flat;
+            self.step = DiatonicStep::from(pc + 1);
         }
         else { unreachable!() }
 

@@ -1,8 +1,8 @@
 use std::borrow::Borrow;
 use std::fmt::{Debug, Formatter};
-use std::ops::{Add, Sub};
+use std::ops::{Add, Mul, Sub};
 use fraction::Integer;
-use crate::attribs::Offset;
+use crate::attribs::{Duration, Offset};
 
 #[derive(Copy, Clone)]
 pub struct PInterval<T>
@@ -13,7 +13,8 @@ pub struct PInterval<T>
 }
 
 impl<T> PInterval<T>
-where T:
+where
+    T:
     Sub<Output = T> + Add<Output = T> +
     From<i32> +
     PartialOrd<T> + Ord +
@@ -68,6 +69,11 @@ where T:
 
     pub fn displace_start_keep_length(&mut self, displacement: T) {
         self.set_start_keep_length(self.start + displacement);
+    }
+
+    pub fn scale_length_keep_start<S: Mul<T, Output=T>>(&mut self, scalar: S)
+    {
+        self.set_length_keep_start(scalar * self.length);
     }
 
     pub fn does_overlap_with(&self, other: &Self) -> bool {

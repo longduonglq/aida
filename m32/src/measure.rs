@@ -6,6 +6,7 @@ use crate::simple_note::SimpleNote;
 use crate::tuplet::Tuplet;
 
 pub type MeasureNumberType = u32;
+#[derive(Clone)]
 pub struct Measure {
     pub interval: MPInterval,
     pub gnotes: Vec<Gnote>,
@@ -33,7 +34,7 @@ impl Measure {
         .gnotes
         .iter()
         .fold(
-            Duration::new(0, 1),
+            Duration::from_integer(0),
             |acc, gnote|{
                 acc + either_gnote!(&gnote, gn => gn.interval.length)
             }

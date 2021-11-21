@@ -1,6 +1,6 @@
 use fraction::Ratio;
 use smallvec::SmallVec;
-use crate::attribs::{Duration, MPInterval, Offset};
+use crate::attribs::{BeatDivision, Duration, MPInterval, Offset};
 use crate::simple_note::{SimpleNote};
 use crate::config::*;
 
@@ -29,19 +29,26 @@ impl Tuplet {
         }
     }
 
-    // fn set_start_keep_end(&mut self, _start: Offset) {
-    //     let displacement = _start - self._interval.start;
-    //     self._interval.set_start_keep_end(_start);
-    //     for note in self.notes.iter_mut() {
-    //         note.interval.displace_start_keep_end(displacement);
-    //     }
-    // }
+    pub fn displace_start_keep_length(&mut self, displacement: Duration) {
+        self.displace_start_keep_length(displacement);
+        self.notes.iter_mut()
+        .for_each(|nt|
+            {nt.interval.displace_start_keep_length(displacement)}
+        )
+    }
+
+    pub fn set_start_keep_length(&mut self, start: Offset) {
+        let displacement = start - self.interval.start;
+        self.set_start_keep_length(start);
+        self.notes.iter_mut()
+        .for_each(|nt| {nt.interval.displace_start_keep_length(displacement)})
+    }
 
     pub fn flatten(&self) -> SmallVec<[SimpleNote; config::EXP_TUP_LEN]>
     {
         // truncate right
         let normal_note_duration =
-            self.interval.length / Offset::new(self.normal_number as i32, 1);
+            self.interval.length / Offset::from_integer(self.normal_number as BeatDivision);
         let mut flat = SmallVec::<[SimpleNote; config::EXP_TUP_LEN]>::new();
         flat.reserve(self.notes.len());
 
@@ -87,12 +94,16 @@ impl Tuplet {
                 return (first_half.into(), second_half.into());
             }
             let crumbles = note.split_at_offset(offset);
-            let (_first_half, _second_half) = flat_vec.split_at(index);
-            let mut first: SmallVec<[SimpleNote; config::EXP_TUP_LEN]> = _first_half.into();
+            let (first_half, second_half) = flat_vec.split_at(index);
+            let (mut first, mut second)
+                = (SmallVec::<[SimpleNote; 6]>::from(first_half),
+                   SmallVec::<[SimpleNote; 6]>::from(second_half));
             first.pop();
-            first.push(crumbles.0);
-            let mut second: SmallVec<[SimpleNote; config::EXP_TUP_LEN]> = _second_half.into();
-            second.insert(0, crumbles.1);
+            first.extend(crumbles.0.into_iter());
+            crumbles.1
+            .into_iter()
+            .rev()
+            .for_each(|sn| {second.insert(0, sn)});
             return (first, second);
         }
         unreachable!()

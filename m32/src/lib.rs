@@ -1,4 +1,5 @@
 #![feature(iter_order_by)]
+#![feature(is_sorted)]
 
 #[macro_use]
 extern crate lazy_static;
