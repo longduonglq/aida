@@ -17,3 +17,5 @@ mod gnote;
 mod measure;
 mod part;
 mod score;
+mod xml_import;
+mod xml_export;

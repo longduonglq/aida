@@ -3,17 +3,17 @@ use std::iter::Iterator;
 use std::path::Iter;
 use xml::common::XmlVersion;
 use chrono::{Date, Utc, DateTime};
-use std::borrow::{Cow, Borrow};
 use super::iter::*;
 use std::str::FromStr;
+use xml::attribute::Attribute;
 
-type XmlString = String;
+pub type XmlString = String;
 
 #[derive(Clone, Debug)]
 pub struct XmlMetaData {
-    version: XmlVersion,
-    encoding: String,
-    date: Date<Utc>
+    pub version: XmlVersion,
+    pub encoding: String,
+    pub date: Date<Utc>
 }
 
 #[derive(Clone, Debug)]
@@ -23,14 +23,14 @@ pub struct XmlAttrib {
 }
 
 #[derive(Clone)]
-pub struct XmlTag<'a> {
+pub struct XmlTag {
     pub name: XmlString,
     pub value: Option<XmlString>,
     pub attribs: Vec<XmlAttrib>,
-    pub children: Vec< Cow<'a, XmlTag<'a>>>
+    pub children: Vec<XmlTag>
 }
 
-impl<'a> Default for XmlTag<'a> {
+impl Default for XmlTag {
     fn default() -> Self {
         XmlTag {
             name: XmlString::new(),
@@ -51,39 +51,110 @@ impl Default for XmlMetaData {
     }
 }
 
-impl<'a> XmlTag<'a>
+impl XmlTag
 {
     // Public functions
 
     // Search
-    fn all_child_with_name(&'a self, name: &'static str)
-        -> impl Iterator<Item = Cow<'a, XmlTag<'a>>>
+    pub fn all_desc_with_name(&self, name: &'static str)
+        -> impl Iterator<Item=&XmlTag>
     {
-        let iter = BfsXmlTagIter::from(Cow::Borrowed(self));
-        iter.filter(move |tag| {tag.name.as_str() == name})
+        BfsXmlTagIter::from(self)
+        .filter(move |tag| {tag.name == name})
+
     }
 
-    fn first_child_with_name(&'a self, name: &'static str)
-        -> impl Iterator<Item = Cow<'a, XmlTag<'a>>>
+    pub fn first_desc_with_name(&self, name: &'static str)
+        -> impl Iterator<Item=&XmlTag>
     {
-        self.all_child_with_name(name).take(1)
+        self.all_desc_with_name(name).take(1)
     }
 
-    // Tag info
-    fn get_attrib_value<T>(&self, key: &'static str)
-        -> Option<T>
-    where
-        T: std::str::FromStr
+    pub fn all_child_with_name(&self, name: &'static str)
+        -> impl Iterator<Item=&XmlTag>
+    {
+        self.children.iter()
+        .filter(move |child| {child.name == name})
+    }
+
+    pub fn first_child_with_name(&self, name: &'static str)
+        -> Option<&XmlTag>
+    {
+        self.all_child_with_name(name)
+        .next()
+    }
+
+    pub fn all_attribs_with_name(&self, name: &'static str)
+        -> impl Iterator<Item=&XmlAttrib>
     {
         self.attribs.iter()
-        .filter(|attr| {attr.name.as_str() == key})
-        .next()
-        .map(|tag| {tag.value.clone()})
-        .map(|val| { val.parse().ok() })
+        .filter(move |attr| {attr.name == name})
+    }
+
+    pub fn all_child_with_attrib(&self, name: &'static str, value: &'static str)
+        -> impl Iterator<Item=&XmlTag>
+    {
+        self.children.iter()
+        .filter(
+            move |ch| {
+                ch.attribs.iter()
+                .any(|attr| {attr.name == name && attr.value == value})
+            }
+        )
+    }
+
+    pub fn get_attrib_value(&self, name: &'static str)
+        -> Option<&str>
+    {
+        self.all_attribs_with_name(name).next()
+        .map(|attr| {attr.value.as_str()})
+    }
+
+    pub fn get_attrib_value_as<T: FromStr>(&self, name: &'static str)
+        -> Option<T>
+    {
+        self.get_attrib_value(name)
+        .map(|val| {val.parse().ok()})
         .flatten()
     }
-    // Private
 
+    pub fn get_child_with_attrib(&self, name: &'static str, value: &'static str)
+        -> Option<&XmlTag>
+    {
+        self.all_child_with_attrib(name, value).next()
+    }
+
+
+    /// Builder methods
+
+    pub fn add_attribute(&mut self, name: XmlString, value: XmlString) -> &mut Self {
+        self.attribs.push(
+            XmlAttrib {
+                name,
+                value
+            }
+        );
+        self
+    }
+
+    pub fn add_attribute_with_type<T: ToString>(&mut self, name: XmlString, value: T)
+        -> &mut Self
+    {
+        self.add_attribute(name, value.to_string());
+        self
+    }
+
+    pub fn add_child(&mut self, name:  XmlString) -> &mut XmlTag {
+        self.children.push(
+            XmlTag {
+                name,
+                value: None,
+                attribs: vec![],
+                children: vec![]
+            }
+        );
+        self.children.last_mut().unwrap()
+    }
 }
 
 
@@ -95,14 +166,14 @@ mod tests {
     #[test]
     fn load_tree() {
         let mut tree = XmlTag::from_path("test/template.musicxml").unwrap();
-        for child in tree.first_child_with_name("identification") {
-            println!("{:?} -- {:?}", child, child.get_attrib_value("id").unwrap_or("NOTHING".to_string()));
+        for child in tree.all_child_with_name("identification") {
+            println!("{:?} -- {:?}", child, child.get_attrib_value("id").unwrap_or("NOTHING"));
         }
-        let mut subtree = tree.first_child_with_name("identification").last().unwrap();
+        let mut subtree = tree.first_desc_with_name("identification").last().unwrap();
         let mut mutsubtree = subtree.to_owned();
-        mutsubtree.to_mut().name = "studp".to_string();
-        mutsubtree.to_mut().value = Some("Long".to_string());
-        mutsubtree.to_mut().children[0].to_mut().name = "fs".to_string();
+        mutsubtree.name = "studp".to_string();
+        mutsubtree.value = Some("Long".to_string());
+        mutsubtree.children[0].name = "fs".to_string();
         println!("{:?}", subtree);
         println!("{:?}", mutsubtree);
     }

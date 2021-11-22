@@ -1,10 +1,10 @@
 use super::tag::*;
 use xml::reader::{self, XmlEvent::*, Events, XmlEvent};
 use core::iter::Peekable;
+use std::borrow::Cow;
 use std::io::{Read, Write};
 use xml::attribute::{Attribute, OwnedAttribute};
 use std::fmt::{Debug, Formatter};
-use std::borrow::{BorrowMut, Borrow, Cow};
 use std::fs::File;
 use xml::writer::{EventWriter, EmitterConfig, XmlEvent as WriterXmlEvent};
 use xml::{ParserConfig};
@@ -12,14 +12,14 @@ use xml::common::XmlVersion;
 use xml::name::OwnedName;
 use xml::namespace::Namespace;
 
-impl<'a> XmlTag<'a>
+impl XmlTag
 {
     pub fn from_reader<T: Read>(mut events: Peekable<Events<T>>)
-        -> Option<Cow<'a, XmlTag<'a>>>
+        -> Option<XmlTag>
     {
-        // Take care of StartDocument here
-        fn _recursive_build<'a, T: Read>(events: &mut Peekable<Events<T>>)
-            -> Option<Cow<'a, XmlTag<'a>>>
+        // TODO: Take care of StartDocument here
+        fn _recursive_build<T: Read>(events: &mut Peekable<Events<T>>)
+            -> Option<XmlTag>
         {
             /**
             Working mechanism:
@@ -37,51 +37,54 @@ impl<'a> XmlTag<'a>
             let mut current_tag: XmlTag = Default::default();
             let mut children: Vec<_> = Vec::with_capacity(10);
             let pull_result = events.next();
-            if pull_result.is_none() {
-                return None;
-            }
+            if pull_result.is_none() { return None; }
 
-            let current_event = pull_result.unwrap();
+            let current_event = pull_result.unwrap().unwrap();
             match current_event {
-                Ok(StartElement {name, attributes, ..}) => {
+                StartElement {name, attributes, ..} => {
                     current_tag = XmlTag {
                         name: name.local_name.to_string(),
                         value: None,
                         attribs: {
                             let mut xml_attribs = Vec::new();
-                            for xml_attrib in attributes {
-                                xml_attribs.push (
-                                    XmlAttrib {
-                                        name: xml_attrib.name.local_name.to_string(),
-                                        value: xml_attrib.value.to_string()
+                            xml_attribs
+                            .extend(
+                                attributes
+                                .iter()
+                                .map(
+                                    |xml_attr| {
+                                        XmlAttrib {
+                                            name: xml_attr.name.local_name.to_string(),
+                                            value: xml_attr.value.to_string()
+                                        }
                                     }
                                 )
-                            }
+                            );
                             xml_attribs
                         },
                         children: Vec::with_capacity(10)
                     };
                 }
-                Ok(Characters(value)) | Ok(CData(value)) => {
+                Characters(value) | CData(value) => {
                     current_tag = XmlTag {
                         value: {if value.is_empty() {None} else {Some(value)}},
                         ..current_tag
                     };
-                    return Some(Cow::Owned(current_tag));
+                    return Some(current_tag);
                 }
-                Ok(EndElement {..}) => {
+                EndElement {..} => {
                     // Logical error because EndElement should be taken care of already when processing
                     // the StartElement. In short, _recursive_build process EndElement instead of
                     // calling itself to process this.
                     unreachable!()
                 }
-                Ok(StartDocument {..}) => {
+                StartDocument {..} => {
                     return _recursive_build(events); // passthrough
                 }
                 // These terminal tag can be ignored by returning None;
                 // However, the top level StartDocument must be passed through by returning recursive call.
-                Ok(EndDocument) => { return None; }
-                Ok(ProcessingInstruction {..}) | Ok(Comment(_)) | Ok(Whitespace(_)) => {
+                EndDocument => { return None; }
+                ProcessingInstruction {..} | Comment(_) | Whitespace(_) => {
                     return None;
                 }
                 _ => {unreachable!()}
@@ -103,24 +106,22 @@ impl<'a> XmlTag<'a>
             {
                 let mut build_res = _recursive_build(events);
                 // Ignore terminal ignorable tags (ie CData, Whitespace,... )
-                if build_res.is_some()
+                if let Some(built_child) = build_res
                 {
-                    let built_child = build_res.as_ref().unwrap();
                     if built_child.name.is_empty() && built_child.value.is_some() {
-                        current_tag.value = build_res.as_ref().unwrap().value.clone();
+                        current_tag.value = built_child.value;
                     }
                     else {
-                        children.push(build_res.unwrap());
+                        children.push(built_child);
                     }
                 }
             }
-            if events.peek().is_some() {
-                let next_event = events.peek();
+            if let Some(next_event) = events.peek() {
                 assert_eq!(
                     current_tag.name,
                     {
-                        match next_event.unwrap().as_ref().unwrap() {
-                            EndElement {name} => {name.local_name.as_str()},
+                        match &next_event {
+                            Ok(EndElement {name}) => {name.local_name.as_str()},
                             _ => unreachable!()
                         }
                     }
@@ -128,12 +129,12 @@ impl<'a> XmlTag<'a>
                 events.next();
             } // removing EndElement(name)
             current_tag.children = children;
-            return Some(Cow::Owned(current_tag));
+            return Some(current_tag);
         }
         _recursive_build(&mut events)
     }
 
-    pub fn from_path(path: &str) -> Option<Cow<XmlTag>>
+    pub fn from_path(path: &std::path::Path) -> Option<XmlTag>
     {
         let mut f = File::open(path).ok()?;
         let mut reader = ParserConfig::new()
@@ -155,7 +156,9 @@ impl<'a> XmlTag<'a>
                     prefix: None
                 },
                 attributes: {
-                    me.attribs.iter()
+                    me
+                    .attribs
+                    .iter()
                     .map(|attrib|{
                         xml::attribute::Attribute {
                             name: xml::name::Name::from(attrib.name.as_str()),
@@ -206,7 +209,7 @@ impl<'a> XmlTag<'a>
     }
 }
 
-impl<'a> Debug for XmlTag<'a> {
+impl Debug for XmlTag {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         static ATOMIC_INDENT: &'static str = "    ";
         fn _recurse_write(me: &XmlTag, depth: i32, sink: &mut Formatter<'_>) {
@@ -239,7 +242,7 @@ impl<'a> Debug for XmlTag<'a> {
     }
 }
 
-impl<'a> XmlTag<'a> {
+impl XmlTag {
     pub fn show_local_tag(&self) {
         static ATOMIC_INDENT: &'static str = "    ";
         let indent = ATOMIC_INDENT;

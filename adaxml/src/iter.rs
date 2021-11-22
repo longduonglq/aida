@@ -1,80 +1,93 @@
-use crate::tag::XmlTag;
+use crate::tag::{XmlAttrib, XmlTag};
 use std::collections::VecDeque;
 use std::iter::FromIterator;
 use std::array::IntoIter;
-use std::borrow::{Borrow, Cow};
+use std::cell::RefCell;
+use xml::attribute::Attribute;
 
-pub struct BfsXmlTagIter<'a> {
-    queue: VecDeque< Cow<'a, XmlTag<'a>>>
+macro_rules! __cast_const_to_mut_ref {
+    ($ref:expr, $type:ty) => {
+        (&mut *(($ref as *const $type) as *mut $type))
+    };
 }
 
-impl<'a, T> From<T> for BfsXmlTagIter<'a>
-where
-    T: Into<Cow<'a, XmlTag<'a>>>
+macro_rules! __cast_mut_to_const_ref {
+    ($ref:expr, $type:ty) => {
+        (& *(($ref as *mut $type) as *const $type))
+    };
+}
+
+// BFS
+pub struct BfsXmlTagIter<'a> {
+    queue: VecDeque<&'a XmlTag>
+}
+
+impl<'a> From<&'a XmlTag> for BfsXmlTagIter<'a>
 {
-    fn from(tag: T) -> Self {
-        Self {
-            queue: VecDeque::from_iter([tag.into()]),
-        }
+    // Require mut ref to make sure the user has mutable access
+    fn from(tag: &'a XmlTag) -> Self {
+        Self { queue : VecDeque::from([tag])}
     }
 }
 
 impl<'a> Iterator for BfsXmlTagIter<'a> {
-    type Item = Cow<'a, XmlTag<'a>>;
+    type Item = &'a XmlTag;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if !self.queue.is_empty() {
-            let v = self.queue.pop_front().unwrap();
-            for child in &v.children {
-                self.queue.push_back(child.clone());
-            }
-            return Some(v);
-        }
-        None
+        if let Some(v) = self.queue.pop_front() {
+            self
+            .queue
+            .extend(v.children.iter());
+
+            Some(v)
+        } else { None }
     }
 }
 
-
+// DFS
 pub struct DfsXmlTagIter<'a> {
-    stack: Vec<Cow<'a, XmlTag<'a>>>
+    stack: Vec<&'a XmlTag>
 }
 
-impl<'a, T> From<T> for DfsXmlTagIter<'a>
-    where
-    T: Into<Cow<'a, XmlTag<'a>>>
+impl<'a> From<&'a XmlTag> for DfsXmlTagIter<'a>
 {
-    fn from(tag: T) -> Self {
+    fn from(tag: &'a XmlTag) -> Self {
         Self {
-            stack: Vec::from_iter([tag.into()]),
+            stack: vec![tag],
         }
     }
 }
 
 impl<'a> Iterator for DfsXmlTagIter<'a> {
-    type Item = Cow<'a, XmlTag<'a>>;
+    type Item = &'a XmlTag;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if !self.stack.is_empty() {
-            let v = self.stack.pop().unwrap();
-            for child in v.children.iter().rev() {
-                self.stack.push(child.clone());
-            }
-            return Some(v);
-        }
-        None
+        if let Some(v) = self.stack.pop() {
+            self
+            .stack
+            .extend(
+                v
+                .children
+                .iter()
+                .rev()
+            );
+
+            Some(v)
+        } else { None }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::borrow::Borrow;
     use crate::tag::XmlTag;
     use crate::io;
-    use crate::iter::{BfsXmlTagIter, DfsXmlTagIter};
+    use crate::iter::{*};
 
     #[test]
     fn test_bfs_iter() {
         let tree = XmlTag::from_path("test/template.musicxml").unwrap();
-        for leaf in BfsXmlTagIter::from(tree) {
+        for leaf in BfsXmlTagIter::from(tree.borrow()) {
             leaf.show_local_tag();
         }
     }
@@ -82,7 +95,7 @@ mod tests {
     #[test]
     fn test_dfs_iter() {
         let tree = XmlTag::from_path("test/template.musicxml").unwrap();
-        for leaf in DfsXmlTagIter::from(tree) {
+        for leaf in DfsXmlTagIter::from(tree.borrow()) {
             leaf.show_local_tag();
         }
     }
