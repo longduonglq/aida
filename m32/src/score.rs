@@ -49,8 +49,8 @@ impl Score {
 }
 
 pub struct MeasuredScore {
-    title: String,
-    measured_parts: Vec<MeasuredPart>
+    pub title: String,
+    pub measured_parts: Vec<MeasuredPart>
 }
 
 impl MeasuredScore {

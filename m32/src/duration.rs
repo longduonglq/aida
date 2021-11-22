@@ -76,7 +76,6 @@ impl From<Duration> for DurationName {
 }
 
 mod duration_utils {
-    use std::borrow::Borrow;
     use smallvec::SmallVec;
     use crate::attribs::{BeatDivision, Duration};
     use std::ops::Bound::*;

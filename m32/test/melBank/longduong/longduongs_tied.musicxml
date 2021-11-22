@@ -1,0 +1,1431 @@
+<?xml version="1.0"?>
+<score-partwise version="3.1">
+	<work>
+		<work-title>pool</work-title>
+	</work>
+	<identification>
+		<creator type="composer">LDAida</creator>
+		<encoding>
+			<encoding-date>2021-09-26</encoding-date>
+			<software>Aida</software>
+		</encoding>
+	</identification>
+	<defaults>
+		<scaling>
+			<millimeters>7.000000</millimeters>
+			<tenths>40</tenths>
+		</scaling>
+	</defaults>
+	<part-list>
+		<score-part id="P1">
+			<part-name>Soprano</part-name>
+		</score-part>
+		<score-part id="P2">
+			<part-name>Bass</part-name>
+		</score-part>
+		<score-part id="P3">
+			<part-name>Bass</part-name>
+		</score-part>
+	</part-list>
+	<part id="P1">
+		<measure number="1">
+			<attributes>
+				<divisions>120</divisions>
+				<key>
+					<fifths>0</fifths>
+				</key>
+				<time>
+					<beats>4</beats>
+					<beat-type>4</beat-type>
+				</time>
+				<clef>
+					<sign>G</sign>
+					<line>2</line>
+				</clef>
+			</attributes>
+			<note color="#B40003">
+				<pitch>
+					<step>B</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>90</duration>
+				<type>eighth</type>
+				<dot />
+				<notehead color="#B40003">normal</notehead>
+				<notations />
+				<lyric number="0">
+					<syllabic>single</syllabic>
+					<text>[I,&lt;iii</text>
+				</lyric>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>MelName:longduong&gt;longduongs_tied&gt;1</text>
+				</lyric>
+			</note>
+			<note color="#1A14A9">
+				<pitch>
+					<step>E</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<type>16th</type>
+				<notehead color="#1A14A9">normal</notehead>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>)[IV7,~I7</text>
+				</lyric>
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<alter>1</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<type>16th</type>
+				<accidental>sharp</accidental>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="start" />
+				<type>16th</type>
+				<notations>
+					<tied type="start" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>]</text>
+				</lyric>
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>A</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="start" />
+				<type>16th</type>
+				<notations>
+					<tied type="start" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[!=V7]</text>
+				</lyric>
+				<lyric number="2">
+					<syllabic>single</syllabic>
+					<text>[&gt;vi,T]</text>
+				</lyric>
+			</note>
+			<note>
+				<pitch>
+					<step>A</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>15</duration>
+				<tie type="start" />
+				<tie type="stop" />
+				<type>32nd</type>
+				<notations>
+					<tied type="start" />
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>A</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>15</duration>
+				<tie type="stop" />
+				<type>32nd</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<type>16th</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<type>16th</type>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[V6,D]</text>
+				</lyric>
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="start" />
+				<type>16th</type>
+				<notations>
+					<tied type="start" />
+				</notations>
+			</note>
+		</measure>
+		<measure number="2">
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[I,V</text>
+				</lyric>
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>]</text>
+				</lyric>
+			</note>
+			<note>
+				<rest />
+				<duration>30</duration>
+				<type>16th</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>40</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>20</duration>
+				<tie type="start" />
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>10</duration>
+				<tie type="start" />
+				<tie type="stop" />
+				<type>32nd</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>10</duration>
+				<tie type="stop" />
+				<type>32nd</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>40</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>20</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>20</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>40</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>A</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>40</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>6</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+		</measure>
+		<measure number="3">
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>A</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<rest />
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>E</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>96</duration>
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>72</duration>
+				<tie type="start" />
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>72</duration>
+				<tie type="start" />
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>24</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>24</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>B</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>5</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+		</measure>
+		<measure number="4">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="5">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+	</part>
+	<part id="P2">
+		<measure number="1">
+			<attributes>
+				<divisions>120</divisions>
+				<key>
+					<fifths>0</fifths>
+				</key>
+				<time>
+					<beats>4</beats>
+					<beat-type>4</beat-type>
+				</time>
+				<clef>
+					<sign>F</sign>
+					<line>4</line>
+				</clef>
+			</attributes>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>72</duration>
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[I,IV,vi]</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>A</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>72</duration>
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>72</duration>
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>36</duration>
+				<type>16th</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[V7]</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>36</duration>
+				<type>16th</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>F</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>36</duration>
+				<type>16th</type>
+				<dot />
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>12</duration>
+				<type>32nd</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>G</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>12</duration>
+				<type>32nd</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<alter>1</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>12</duration>
+				<type>32nd</type>
+				<accidental>sharp</accidental>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>G</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<alter>1</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<accidental>sharp</accidental>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[&lt;V7]</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>A</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>48</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>48</duration>
+				<tie type="start" />
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>[=V7]</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>48</duration>
+				<tie type="start" />
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>A</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>48</duration>
+				<tie type="start" />
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>160</duration>
+				<tie type="stop" />
+				<type>half</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>160</duration>
+				<tie type="stop" />
+				<type>half</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>A</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>160</duration>
+				<tie type="stop" />
+				<type>half</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="stop" />
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>80</duration>
+				<tie type="start" />
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>^</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>80</duration>
+				<tie type="start" />
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>80</duration>
+				<tie type="start" />
+				<type>quarter</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tied type="start" />
+					<tuplet type="stop" />
+				</notations>
+			</note>
+		</measure>
+		<measure number="2">
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+				<lyric number="1">
+					<syllabic>single</syllabic>
+					<text>v</text>
+				</lyric>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>30</duration>
+				<tie type="stop" />
+				<type>16th</type>
+				<notations>
+					<tied type="stop" />
+				</notations>
+			</note>
+			<note>
+				<rest />
+				<duration>30</duration>
+				<type>16th</type>
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<rest />
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>F</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>24</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>5</actual-notes>
+					<normal-notes>4</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>120</duration>
+				<type>quarter</type>
+				<dot />
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="start" />
+				</notations>
+			</note>
+			<note>
+				<rest />
+				<duration>20</duration>
+				<type>16th</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<dot />
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>40</duration>
+				<type>eighth</type>
+				<time-modification>
+					<actual-notes>3</actual-notes>
+					<normal-notes>2</normal-notes>
+				</time-modification>
+				<notations>
+					<tuplet type="stop" />
+				</notations>
+			</note>
+		</measure>
+		<measure number="3">
+			<note>
+				<pitch>
+					<step>G</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>E</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="4">
+			<note>
+				<pitch>
+					<step>E</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>360</duration>
+				<type>half</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>360</duration>
+				<type>half</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>E</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>360</duration>
+				<type>half</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>A</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>G</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>60</duration>
+				<type>eighth</type>
+				<notations />
+			</note>
+			<note>
+				<pitch>
+					<step>B</step>
+					<octave>2</octave>
+				</pitch>
+				<duration>45</duration>
+				<type>16th</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>G</step>
+					<octave>3</octave>
+				</pitch>
+				<duration>45</duration>
+				<type>16th</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<chord />
+				<pitch>
+					<step>C</step>
+					<octave>4</octave>
+				</pitch>
+				<duration>45</duration>
+				<type>16th</type>
+				<dot />
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>15</duration>
+				<type>32nd</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="5">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+	</part>
+	<part id="P3">
+		<measure number="1">
+			<attributes>
+				<divisions>120</divisions>
+				<key>
+					<fifths>0</fifths>
+				</key>
+				<time>
+					<beats>4</beats>
+					<beat-type>4</beat-type>
+				</time>
+				<clef>
+					<sign>F</sign>
+					<line>4</line>
+				</clef>
+			</attributes>
+			<note color="#A29605">
+				<rest />
+				<duration>120</duration>
+				<type>quarter</type>
+				<notehead color="#A29605">normal</notehead>
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>120</duration>
+				<type>quarter</type>
+				<notations />
+			</note>
+			<note>
+				<rest />
+				<duration>240</duration>
+				<type>half</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="2">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="3">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="4">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+		<measure number="5">
+			<note>
+				<rest />
+				<duration>480</duration>
+				<type>whole</type>
+				<notations />
+			</note>
+		</measure>
+	</part>
+</score-partwise>

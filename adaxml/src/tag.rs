@@ -1,11 +1,8 @@
-use std::collections::VecDeque;
 use std::iter::Iterator;
-use std::path::Iter;
 use xml::common::XmlVersion;
-use chrono::{Date, Utc, DateTime};
+use chrono::{Date, Utc};
 use super::iter::*;
 use std::str::FromStr;
-use xml::attribute::Attribute;
 
 pub type XmlString = String;
 
@@ -124,6 +121,35 @@ impl XmlTag
         self.all_child_with_attrib(name, value).next()
     }
 
+    pub fn get_child_with_name(&self, name: &'static str)
+        -> Option<&XmlTag>
+    {
+        self.children.iter()
+        .filter(move |child| {child.name == name})
+        .next()
+    }
+
+    pub fn get_child_value(&self, name: &'static str)
+        -> Option<&XmlString>
+    {
+        self.get_child_with_name(name)?
+        .value
+        .as_ref()
+    }
+
+    pub fn get_child_value_as<T:FromStr>(&self, name: &'static str)
+        -> Option<T>
+    {
+        self.get_child_value(name)
+        .map(|c| {c.parse().ok()})
+        .flatten()
+    }
+
+    pub fn get_desc_with_name(&self, name: &'static str)
+        -> Option<&XmlTag>
+    {
+        self.all_desc_with_name(name).next()
+    }
 
     /// Builder methods
 
@@ -165,7 +191,7 @@ mod tests {
 
     #[test]
     fn load_tree() {
-        let mut tree = XmlTag::from_path("test/template.musicxml").unwrap();
+        let mut tree = XmlTag::from_path("test/template.musicxml".into()).unwrap();
         for child in tree.all_child_with_name("identification") {
             println!("{:?} -- {:?}", child, child.get_attrib_value("id").unwrap_or("NOTHING"));
         }

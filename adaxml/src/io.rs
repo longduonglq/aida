@@ -1,15 +1,13 @@
 use super::tag::*;
-use xml::reader::{self, XmlEvent::*, Events, XmlEvent};
+use xml::reader::{XmlEvent::*, Events};
 use core::iter::Peekable;
 use std::borrow::Cow;
 use std::io::{Read, Write};
-use xml::attribute::{Attribute, OwnedAttribute};
 use std::fmt::{Debug, Formatter};
 use std::fs::File;
 use xml::writer::{EventWriter, EmitterConfig, XmlEvent as WriterXmlEvent};
 use xml::{ParserConfig};
 use xml::common::XmlVersion;
-use xml::name::OwnedName;
 use xml::namespace::Namespace;
 
 impl XmlTag
@@ -104,7 +102,7 @@ impl XmlTag
                     }
                 }
             {
-                let mut build_res = _recursive_build(events);
+                let build_res = _recursive_build(events);
                 // Ignore terminal ignorable tags (ie CData, Whitespace,... )
                 if let Some(built_child) = build_res
                 {
@@ -134,10 +132,10 @@ impl XmlTag
         _recursive_build(&mut events)
     }
 
-    pub fn from_path(path: &std::path::Path) -> Option<XmlTag>
+    pub fn from_path(path: &str) -> Option<XmlTag>
     {
-        let mut f = File::open(path).ok()?;
-        let mut reader = ParserConfig::new()
+        let f = File::open(path).ok()?;
+        let reader = ParserConfig::new()
             .trim_whitespace(true)
             .ignore_comments(true)
             .create_reader(f);
@@ -172,7 +170,7 @@ impl XmlTag
             w.write(tag_begin);
             if me.value.is_some() {
                 let value_event = WriterXmlEvent::Characters(me.value.as_ref().unwrap());
-                w.write(value_event);
+                w.write(value_event).unwrap();
             }
 
             for child in me.children.iter() {

@@ -1,9 +1,5 @@
-use crate::tag::{XmlAttrib, XmlTag};
+use crate::tag::{XmlTag};
 use std::collections::VecDeque;
-use std::iter::FromIterator;
-use std::array::IntoIter;
-use std::cell::RefCell;
-use xml::attribute::Attribute;
 
 macro_rules! __cast_const_to_mut_ref {
     ($ref:expr, $type:ty) => {
