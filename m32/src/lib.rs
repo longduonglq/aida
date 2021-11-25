@@ -1,5 +1,7 @@
 #![feature(iter_order_by)]
 #![feature(is_sorted)]
+#![feature(iter_zip)]
+#![feature(trace_macros)]
 
 #[macro_use]
 extern crate lazy_static;

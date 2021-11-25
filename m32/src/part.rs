@@ -11,7 +11,7 @@ use crate::config::config;
 use crate::{either_gnote};
 use crate::gnote::Gnote;
 use crate::simple_note;
-use crate::measure::{Measure, MeasureNumberType};
+use crate::measure::{Measure, measure_length_from_time_sig, MeasureNumberType};
 use crate::pitch::PsType;
 use crate::simple_note::{SimpleNote, TieInfo};
 use super::attribs::*;
@@ -22,7 +22,7 @@ pub struct Part {
     pub key_sig: KeySignature,
     pub clef_sign: ClefType,
     pub time_sig: TimeSig,
-    pub gnotes: Vec<Gnote>
+    pub gnotes: Vec<Gnote>,
 }
 
 impl Part {
@@ -38,8 +38,32 @@ impl Part {
             key_sig,
             clef_sign,
             time_sig,
-            gnotes: Vec::new()
+            gnotes: Vec::new(),
         }
+    }
+
+    pub fn append_simple_note(&mut self, mut sn: SimpleNote) {
+        sn.interval.set_start_keep_length(
+            self.gnotes
+            .last()
+            .map(|gn| { either_gnote!(gn, _gn => _gn.interval) })
+            .map(|itv| { itv.end })
+            .unwrap_or(Offset::from_integer(0))
+        );
+        self.gnotes.push(Gnote::SimpleNote(sn));
+    }
+
+    pub fn append_gnote(&mut self, mut gn: Gnote) {
+        either_gnote!(&mut gn, _gn => {
+            _gn.interval.set_start_keep_length(
+                self.gnotes
+                .last()
+                .map(|g| { either_gnote!( g, _g => _g.interval) })
+                .map(|itv| { itv.end })
+                .unwrap_or(Offset::from_integer(0))
+            )
+        });
+        self.gnotes.push(gn);
     }
 
     pub fn to_measured(&self) -> MeasuredPart
@@ -54,9 +78,7 @@ impl Part {
 
         // Measure length in quarter notes of time signature a/b
         // is given by a * (4 / b)
-        let measure_length =
-            Duration::new((self.time_sig.numer() * TimeSigComponent::from(4)) as BeatDivision,
-                          *self.time_sig.denom() as BeatDivision);
+        let measure_length = measure_length_from_time_sig(self.time_sig);
         let est_number_of_measures =
             1 +
             (either_gnote!(self.gnotes.last().unwrap(), gn => gn.interval.end) / measure_length)
@@ -414,7 +436,9 @@ pub struct MeasuredPart {
     pub key_sig: KeySignature,
     pub clef_sign: ClefType,
     pub time_sig: TimeSig,
-    pub measures: Vec<Measure>
+    pub measures: Vec<Measure>,
+
+    pub measure_length: Duration, // used alot so compute it here
 }
 
 impl MeasuredPart {
@@ -430,7 +454,8 @@ impl MeasuredPart {
             key_sig,
             clef_sign,
             time_sig,
-            measures: Vec::new()
+            measures: Vec::new(),
+            measure_length: measure_length_from_time_sig(time_sig)
         }
     }
 
@@ -459,9 +484,7 @@ impl MeasuredPart {
 
     pub fn append_gnote(&mut self, gnote: Gnote) -> anyhow::Result<()>
     {
-        let measure_length
-            = Duration::new((self.time_sig.numer() * 4) as BeatDivision,
-                            *self.time_sig.denom() as BeatDivision);
+        let measure_length = self.measure_length;
 
         if self.measures.is_empty() {
             self.measures.push(
@@ -593,5 +616,20 @@ impl MeasuredPart {
             .all( |mea| {mea.get_elements_acc_duration() == measure_length} )
         );
         Ok(())
+    }
+
+    pub fn append_empty_measure(&mut self) -> &mut Measure {
+        self.measures
+        .push(
+            Measure::new(
+                self.measures.last()
+                .map(|mea| { mea.interval.end })
+                .unwrap_or(Offset::from_integer(0)),
+                self.measure_length,
+                (self.measures.len() + 1) as MeasureNumberType,
+                Vec::new()
+            )
+        );
+        self.measures.last_mut().unwrap()
     }
 }

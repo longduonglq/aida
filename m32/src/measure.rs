@@ -1,5 +1,5 @@
 use fraction::Ratio;
-use crate::attribs::{Duration, MPInterval, Offset};
+use crate::attribs::{BeatDivision, Duration, MPInterval, Offset, TimeSig, TimeSigComponent};
 use crate::either_gnote;
 use crate::gnote::Gnote;
 use crate::simple_note::SimpleNote;
@@ -11,6 +11,15 @@ pub struct Measure {
     pub interval: MPInterval,
     pub gnotes: Vec<Gnote>,
     pub measure_number: MeasureNumberType,
+}
+
+pub fn measure_length_from_time_sig(ts: TimeSig)
+    -> Duration
+{
+    Duration::new(
+        (ts.numer() * TimeSigComponent::from(4)) as BeatDivision,
+        *ts.denom() as BeatDivision
+    )
 }
 
 impl Measure {

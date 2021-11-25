@@ -67,6 +67,16 @@ pub enum Alter {
     No = 0,
     Sharp = 1
 }
+impl From<i32> for Alter {
+    fn from(num: i32) -> Self {
+        match num {
+            -1 => Alter::Flat,
+            0 => Alter::No,
+            1 => Alter::Sharp,
+            _ => panic!("Unexpected alter numerical value!")
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct Pitch {

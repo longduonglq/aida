@@ -4,6 +4,30 @@ use chrono::{Date, Utc};
 use super::iter::*;
 use std::str::FromStr;
 
+/// Usage: drill!( &tag, "note", "attributes" ) -> Option<&XmlTag>
+#[macro_export]
+macro_rules! drill_helper {
+    ($tag:expr, $tag_name:expr) => {{
+        $tag.get_child_with_name($tag_name)
+    }};
+    ($tag:expr, $tag_name:expr, $($rest:expr),*) => {{
+        drill_helper!($tag, $($rest),+)
+        .and_then(|c| { c.get_child_with_name($tag_name) } )
+    }}
+}
+#[macro_export]
+macro_rules! drill {
+    ($tag:expr; [] $($reversed:expr)*) => {
+        drill_helper!($tag, $($reversed),*)
+    };
+    ($tag:expr; [$first:expr] $($reversed:expr)*) => {
+        drill!($tag; [] $first $($reversed)*)
+    };
+    ($tag:expr; [$first:expr, $($rest:expr),*] $($reversed:expr)*) => {
+        drill!($tag; [$($rest),*] $first $($reversed)*)
+    }
+}
+
 pub type XmlString = String;
 
 #[derive(Clone, Debug)]
@@ -149,6 +173,11 @@ impl XmlTag
         -> Option<&XmlTag>
     {
         self.all_desc_with_name(name).next()
+    }
+
+    pub fn does_child_exists(&self, name: &'static str) -> bool
+    {
+        self.get_child_with_name("name").is_some()
     }
 
     /// Builder methods

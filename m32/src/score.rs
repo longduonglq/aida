@@ -2,15 +2,15 @@ use crate::part::MeasuredPart;
 use super::part::{Part};
 
 pub struct Score {
-    title: String,
-    parts: Vec<Part>
+    pub title: String,
+    pub parts: Vec<Part>
 }
 
 impl Score {
-    pub fn new(title: String) -> Self
+    pub fn new(title: &str) -> Self
     {
         Self {
-            title,
+            title: title.to_string(),
             parts: Vec::new()
         }
     }
@@ -34,7 +34,7 @@ impl Score {
     }
 
     pub fn fuse_tied_notes(&self) -> anyhow::Result<Self> {
-        let mut new_score = Self::new(self.title.clone());
+        let mut new_score = Self::new(self.title.as_str());
         new_score.parts.reserve(self.parts.len());
         new_score
         .parts
@@ -62,7 +62,7 @@ impl MeasuredScore {
     }
 
     pub fn flatten(&self) -> Score {
-        let mut flat_score = Score::new(self.title.clone());
+        let mut flat_score = Score::new(self.title.as_str());
         flat_score.parts.reserve(self.measured_parts.len());
         flat_score
         .parts

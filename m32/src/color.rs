@@ -6,7 +6,7 @@ pub struct Color {
 }
 
 impl Color {
-    fn from_hex_rgb(hex_str: &str) -> Self {
+    pub fn from_hex_rgb(hex_str: &str) -> Self {
         let mut processed = hex_str.strip_prefix("#").unwrap();
         // strip alpha if present
         if processed.len() == 8 { processed = &processed[2..] }
@@ -18,8 +18,20 @@ impl Color {
         }
     }
 
-    fn to_hex(&self) -> String {
+    pub fn to_hex(&self) -> String {
         format!("#{:X}{:X}{:X}", self.red, self.green, self.blue)
+    }
+}
+
+impl From<&str> for Color {
+    fn from(hex: &str) -> Self {
+        Color::from_hex_rgb(hex)
+    }
+}
+
+impl Into<String> for Color {
+    fn into(self) -> String {
+        self.to_hex()
     }
 }
 

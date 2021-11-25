@@ -4,7 +4,7 @@ use crate::attribs::{BeatDivision, Duration, MPInterval, Offset};
 use crate::simple_note::{SimpleNote};
 use crate::config::*;
 
-type NormalNumType = u16;
+pub type NormalNumType = u16;
 
 #[derive(Clone)]
 pub struct Tuplet {
