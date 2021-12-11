@@ -1,3 +1,5 @@
+use std::ffi::OsStr;
+use std::fmt::{Display, Formatter};
 use std::iter::{Peekable, zip};
 use std::path::Path;
 use anyhow::{anyhow, Context};
@@ -6,7 +8,6 @@ use smallvec::SmallVec;
 use adaxml::{drill, drill_helper};
 use crate::score::*;
 use adaxml::tag::*;
-use adaxml::io::*;
 use adaxml::iter::*;
 use crate::attribs::{BeatDivision, ClefType, Duration, KeySignature, MPInterval, Offset, TimeSig, TimeSigComponent};
 use crate::color::Color;
@@ -21,6 +22,24 @@ use crate::{either_gnote, simple_note, tuplet};
 use crate::simple_note::{TieInfo};
 use crate::tuplet::NormalNumType;
 
+#[derive(Debug)]
+enum ImportErr {
+    UnknownFileExt(String)
+}
+
+impl Display for ImportErr {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let fmt = match self {
+            Self::UnknownFileExt(s) => format_args!("UnknownFileExt: {}", s).to_string(),
+            _ => {unreachable!()}
+        };
+        f.write_str(fmt.as_str());
+        Ok(())
+    }
+}
+
+impl std::error::Error for ImportErr {}
+
 pub struct PartAttributes {
     division: BeatDivision,
     key_fifths: KeySignature,
@@ -31,6 +50,32 @@ pub struct PartAttributes {
     pub measure_length: Duration //computed measure length since used alot
 }
 /// /////// Part //////// //
+
+pub fn score_from_path(path_: &str) -> anyhow::Result<Score>
+{
+    let path = std::path::Path::new(path_);
+    match path
+        .extension()
+        .ok_or(ImportErr::UnknownFileExt("".to_string()))?
+        .to_str()
+        .unwrap()
+    {
+        "mxl" => {
+            unimplemented!()
+        },
+        "musicxml" => {
+            let score_tag = adaxml::io::XmlTag::from_path(path.to_str().unwrap_or_default())?;
+            score_from_tag(&score_tag)
+        }
+        _ => {
+            anyhow::Result::Err(anyhow::Error::from(ImportErr::UnknownFileExt(
+                path.extension().unwrap()
+                .to_str().unwrap()
+                .to_string()
+            )))
+        }
+    }
+}
 
 pub fn score_from_tag(score_tag: &XmlTag)
     -> anyhow::Result<Score>
@@ -515,9 +560,9 @@ pub fn part_attributes_from_tag(tag: &XmlTag)
     };
     part_attrs.division
         = tag
-        .get_child_with_name("divisions").context("Cannot find <division> tag")?
-        .value.as_ref().context("<division> tag contains no value")?
-        .parse().context("Can't parse value in <division>")?;
+            .get_child_with_name("divisions").context("Cannot find <division> tag")?
+            .value.as_ref().context("<division> tag contains no value")?
+            .parse().context("Can't parse value in <division>")?;
 
     {
         trace_macros!(true);
@@ -573,5 +618,6 @@ mod tests {
     #[test]
     fn test () {
         let m = measured_score_from_path("test/template.musicxml").unwrap();
+        println!("{:?}", m)
     }
 }

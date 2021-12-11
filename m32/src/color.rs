@@ -1,3 +1,5 @@
+use std::fmt::{Debug, Formatter};
+
 #[derive(Clone)]
 pub struct Color {
     red: u16,
@@ -32,6 +34,11 @@ impl From<&str> for Color {
 impl Into<String> for Color {
     fn into(self) -> String {
         self.to_hex()
+    }
+}
+
+impl Debug for Color {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
     }
 }
 

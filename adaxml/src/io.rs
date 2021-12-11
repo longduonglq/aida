@@ -1,19 +1,40 @@
-use super::tag::*;
+pub use super::tag::*;
 use xml::reader::{XmlEvent::*, Events};
 use core::iter::Peekable;
 use std::borrow::Cow;
 use std::io::{Read, Write};
-use std::fmt::{Debug, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
+use anyhow::Error;
 use xml::writer::{EventWriter, EmitterConfig, XmlEvent as WriterXmlEvent};
 use xml::{ParserConfig};
 use xml::common::XmlVersion;
 use xml::namespace::Namespace;
 
+#[derive(Debug)]
+enum AdaIoErr {
+    OpenFileErr,
+    ParseFileErr
+}
+
+impl Display for AdaIoErr {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(
+            format_args!("{}",
+            match self {
+                Self::OpenFileErr => "OpenFileErr",
+                Self::ParseFileErr => "ParseFileErr"
+            })
+        )
+    }
+}
+
+impl std::error::Error for AdaIoErr {}
+
 impl XmlTag
 {
     pub fn from_reader<T: Read>(mut events: Peekable<Events<T>>)
-        -> Option<XmlTag>
+        -> anyhow::Result<XmlTag>
     {
         // TODO: Take care of StartDocument here
         fn _recursive_build<T: Read>(events: &mut Peekable<Events<T>>)
@@ -129,18 +150,18 @@ impl XmlTag
             current_tag.children = children;
             return Some(current_tag);
         }
-        _recursive_build(&mut events)
+        _recursive_build(&mut events).ok_or(Error::from(AdaIoErr::ParseFileErr))
     }
 
-    pub fn from_path(path: &str) -> Option<XmlTag>
+    pub fn from_path(path: &str) -> anyhow::Result<XmlTag>
     {
-        let f = File::open(path).ok()?;
+        let f = File::open(path)?;
         let reader = ParserConfig::new()
             .trim_whitespace(true)
             .ignore_comments(true)
             .create_reader(f);
         let tree = XmlTag::from_reader(reader.into_iter().peekable());
-        return tree;
+        tree
     }
 
     pub fn to_writer<W: Write>(&self, writer: &mut EventWriter<W>) {

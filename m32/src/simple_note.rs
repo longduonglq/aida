@@ -98,17 +98,19 @@ impl Debug for SimpleNote {
         }
         else if self.is_note() {
             f.write_fmt(format_args!(
-                "\tNote<[{:.2}, {:.2}) | length={:.2}> ",
+                "\tNote<[{:.2}, {:.2}) | length={:.2}> | tie={:?}",
                 self.interval.start, self.interval.end,
-                self.interval.length
+                self.interval.length,
+                self.tie_info
             ));
             format_args!("| {:?}", self.pitches.iter().last().unwrap());
         }
         else {
             f.write_fmt(format_args!(
-                "\tChord<[{:.2}, {:.2}) | length={:.2}> ",
+                "\tChord<[{:.2}, {:.2}) | length={:.2}> | tie={:?}",
                 self.interval.start, self.interval.end,
-                self.interval.length
+                self.interval.length,
+                self.tie_info
             ));
             for pitch in &self.pitches {
                 f.write_fmt(format_args!("{:?} ", pitch));
